@@ -1,0 +1,14 @@
+﻿@{
+	ViewData["Title"] = "Error";
+	Layout = "_Layout";
+	string errorMessage = "Unknown Error";
+}
+
+<h1>Error</h1>
+
+<br />
+
+@if (ViewBag.Code == 404) { errorMessage = "Page Not found"; }
+
+<h2>Error Message : @errorMessage</h2>
+<a href="/">Go Back</a>

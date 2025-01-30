@@ -1,8 +1,25 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "_Layout";
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "_Layout";
 }
 
 <h1>Index</h1>
+<form action="/Home/Search">
+    <div class="form-group">
+        <label style="cursor:pointer" for="firstInput">Name</label>
+        <input name="first" type="number" class="form-control" id="firstInput" placeholder="First number">
+    </div>
+
+    <div class="form-group">
+        <label style="cursor:pointer" for="secondInput">Surname</label>
+        <input name="second" type="number" class="form-control" id="secondInput" placeholder="Second number">
+    </div>
+
+    <div class="form-group">
+        <label style="cursor:pointer" for="operationInput">Surname</label>
+        <input name="operation" type="text" class="form-control" id="operationInput" placeholder="Operation">
+    </div>
+    
+    <button type="submit" class="btn btn-secondary">Search</button>
+</form>
 

@@ -10,9 +10,22 @@ var app = builder.Build();
 //Напр. фотографии, стили, favicon и тп.
 app.UseStaticFiles();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+else
+{
+    app.UseStatusCodePagesWithRedirects("/Home/Error?code={0}");
+    app.UseExceptionHandler("/Home/Error");
+}
+
+
 //Задаем нашему приложению путь по умолчанию (при необходимости его можно менять)
 //Таким образом при открытии браузера в URL будет /Home/Index
 //Где Home - имя контроллера (раздела майта), a Index - имя метода (страницы)
 app.MapDefaultControllerRoute();
+
 
 app.Run();
