@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Contacts";
+    Layout = "_Layout";
+}
+
+<h1>Contacts:</h1>
+
+<ul>
+
+@foreach (var item in ViewBag.Contacts)
+{
+    <li>@item</li>
+}
+
+</ul>
