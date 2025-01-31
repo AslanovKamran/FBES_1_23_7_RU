@@ -1,0 +1,38 @@
+﻿@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<br />
+
+<form method="get" action="/Home/Index">
+	<div class="form-group">
+		<label for="titleInput">Title</label>
+		<input type="text" name="title" class="form-control" id="titleInput" placeholder="Title here...">
+	</div>
+
+	<button type="submit" class="btn btn-primary">Find a movie!</button>
+</form>
+
+<br />
+
+@if (@ViewBag.Movies is not null)
+{
+
+	<div class="row">
+		@foreach (var movie in ViewBag.Movies)
+		{
+			<div class="col-md-3">
+				<div class="card my-3" style="width: 18rem;">
+					<img class="card-img-top" src="@movie.Poster" width="200" height="300" style="object-fit:contain" alt="Card image cap">
+					<div class="card-body">
+						<h5 class="card-title">@movie.Title</h5>
+						<p class="card-text">Movie Type: @movie.Type</p>
+						<p class="card-text">Movie Id: @movie.imdbID</p>
+						<a href="/Home/Details?imdbID=@movie.imdbID" class="btn btn-primary">Details...</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}

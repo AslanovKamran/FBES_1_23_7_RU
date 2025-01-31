@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+@if (ViewBag.Movie is not null) 
+{
+    <div class="card container" style="width: 18rem;">
+        <img style="padding:10px" class="card-img-top" src="@ViewBag.Movie.Poster" alt="Card image cap">
+        <div class="card-body">
+            <p class="card-text text-center">@ViewBag.Movie.Title</p>
+        </div>
+    </div>
+}

@@ -1,0 +1,47 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+<h1>News:</h1>
+<br />
+
+@if (TempData.ContainsKey("Added"))
+{
+
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<strong>Success!</strong>@TempData["Added"]
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+}
+
+@if (TempData.ContainsKey("Exception"))
+{
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Fail!</strong>@TempData["Exception"]
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+}
+
+<div class="row">
+
+	@foreach (var post in ViewBag.Posts)
+	{
+		<div class="col-md-4">
+
+			<div class="card" style="width: 18rem;">
+				<img width="200" height="300" style="object-fit:cover" class="card-img-top" src="@post.ImageUrl">
+				<div class="card-body">
+					<h5 class="card-title">@post.Title</h5>
+					<p class="card-text">@post.Content</p>
+					<a href="/Home/Details?id=@post.Id" class="btn btn-primary">Details</a>
+				</div>
+			</div>
+
+		</div>
+	}
+
+</div>

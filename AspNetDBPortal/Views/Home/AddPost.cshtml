@@ -1,0 +1,31 @@
+﻿@{
+	ViewData["Title"] = "AddPost";
+}
+
+<h1>AddPost</h1>
+
+<form method="post" action="/Home/AddPost">
+
+	<div class="form-group my-1">
+		<label style="cursor:pointer" for="titleInput">Title</label>
+		<input name="title" type="text" class="form-control" id="titleInput">
+	</div>
+
+	<div class="form-group my-1">
+		<label style="cursor:pointer" for="contentInput">Content</label>
+		<textarea rows="4" cols="5" name="content" type="text" class="form-control" id="contentInput"></textarea>
+	</div>
+
+	<div class="form-group my-1">
+		<label style="cursor:pointer" for="descriptionInput">Description</label>
+		<input name="description" type="text" class="form-control" id="descriptionInput">
+	</div>
+
+	<div class="form-group my-3">
+		<label style="cursor:pointer" for="imageUrlInput">Image Url</label>
+		<input name="imageUrl" type="text" class="form-control" id="imageUrlInput">
+	</div>
+
+	<button type="submit" class="btn btn-primary">Add a post</button>
+</form>
+
