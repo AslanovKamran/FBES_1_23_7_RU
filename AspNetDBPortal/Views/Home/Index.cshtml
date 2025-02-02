@@ -1,47 +1,51 @@
-﻿@{
-	ViewData["Title"] = "Home Page";
+﻿@model List<Post>;
+
+@{
+    ViewData["Title"] = "Home Page";
 }
 
-<h1>News:</h1>
-<br />
+<div class="text-center">
+    <h1>News</h1>
+</div>
 
 @if (TempData.ContainsKey("Added"))
 {
-
-	<div class="alert alert-success alert-dismissible fade show" role="alert">
-		<strong>Success!</strong>@TempData["Added"]
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
+    <div class="alert alert-success text-center" role="alert">
+        <strong>Success! </strong>@TempData["Added"]
+    </div>
 }
 
-@if (TempData.ContainsKey("Exception"))
+@if (TempData.ContainsKey("Fail"))
 {
-	<div class="alert alert-danger alert-dismissible fade show" role="alert">
-		<strong>Fail!</strong>@TempData["Exception"]
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Fail!</strong>@TempData["Fail"]
+    </div>
 }
 
-<div class="row">
+@if (TempData.ContainsKey("Deleted"))
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Deleted!</strong>@TempData["Deleted"]
+    </div>
+}
 
-	@foreach (var post in ViewBag.Posts)
-	{
-		<div class="col-md-4">
 
-			<div class="card" style="width: 18rem;">
-				<img width="200" height="300" style="object-fit:cover" class="card-img-top" src="@post.ImageUrl">
-				<div class="card-body">
-					<h5 class="card-title">@post.Title</h5>
-					<p class="card-text">@post.Content</p>
-					<a href="/Home/Details?id=@post.Id" class="btn btn-primary">Details</a>
-				</div>
-			</div>
+@if (@Model is not null)
+{
+    <div class="row">
+        @foreach (var post in @Model)
+        {
+            <div class="col-md-4 my-3">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" width="200" height="300" style="object-fit:contain" src="@post.ImageUrl" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@post.Title</h5>
+                        <p class="card-text">@post.Content</p>
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">Watch Full</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
 
-		</div>
-	}
-
-</div>

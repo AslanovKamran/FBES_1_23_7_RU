@@ -1,0 +1,43 @@
+﻿@model Post;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<hr />
+
+@if (Model is not null)
+{
+
+
+    <div class="card text-center">
+        <div class="card-header">
+            News details
+        </div>
+        <div class="card-body">
+            <img height="300" style="object-fit:contain" class="card-img" src="@Model.ImageUrl" alt="Card image cap">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text">@Model.Description</p>
+            <p class="card-text">@Model.Content</p>
+
+            <form method="post" asp-action="DeletePost" asp-route-id="@Model.Id">
+                <button class="btn btn-danger" type="submit">Delete this post</button>
+            </form>
+
+
+        </div>
+        <div class="card-footer text-muted">
+            @Model.CreatedAt.ToString("dd/MM/yy HH:mm")
+        </div>
+    </div>
+
+}
+
+else
+{
+    <div class="alert alert-danger" role="alert">
+        This post doesn't exist!
+        <a href="/">Go back</a>
+    </div>
+}

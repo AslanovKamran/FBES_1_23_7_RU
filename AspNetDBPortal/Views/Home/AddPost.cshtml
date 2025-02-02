@@ -1,31 +1,42 @@
-﻿@{
-	ViewData["Title"] = "AddPost";
+﻿@model Post;
+
+@{
+    ViewData["Title"] = "AddPost";
 }
 
-<h1>AddPost</h1>
+<h4>Post</h4>
 
-<form method="post" action="/Home/AddPost">
+<hr />
 
-	<div class="form-group my-1">
-		<label style="cursor:pointer" for="titleInput">Title</label>
-		<input name="title" type="text" class="form-control" id="titleInput">
-	</div>
+<form method="post" asp-controller="Home" asp-action="AddPost">
 
-	<div class="form-group my-1">
-		<label style="cursor:pointer" for="contentInput">Content</label>
-		<textarea rows="4" cols="5" name="content" type="text" class="form-control" id="contentInput"></textarea>
-	</div>
+    <div class="form-group">
+        <label style="cursor:pointer" asp-for="Title"></label>
+        <input type="text" class="form-control my-2" asp-for="Title">
+        <span style="color:red" asp-validation-for="Title"></span>
+    </div>
 
-	<div class="form-group my-1">
-		<label style="cursor:pointer" for="descriptionInput">Description</label>
-		<input name="description" type="text" class="form-control" id="descriptionInput">
-	</div>
+    <div class="form-group">
+        <label style="cursor:pointer" asp-for="Content"></label>
+        <textarea rows="3" cols="4" type="text" class="form-control my-2" asp-for="Content"> </textarea>
+        <span asp-validation-for="Content"></span>
+    </div>
 
-	<div class="form-group my-3">
-		<label style="cursor:pointer" for="imageUrlInput">Image Url</label>
-		<input name="imageUrl" type="text" class="form-control" id="imageUrlInput">
-	</div>
+    <div class="form-group">
+        <label style="cursor:pointer" asp-for="Description"></label>
+        <textarea rows="3" cols="6" type="text" class="form-control my-2" asp-for="Description"> </textarea>
+    </div>
 
-	<button type="submit" class="btn btn-primary">Add a post</button>
+    <div class="form-group">
+        <label asp-for="ImageUrl" style="cursor:pointer">Image url</label>
+        <input type="text" class="form-control my-2" asp-for="ImageUrl">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add post</button>
 </form>
 
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
