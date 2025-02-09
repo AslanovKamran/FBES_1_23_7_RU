@@ -1862,6 +1862,9 @@
     <Content Remove="wwwroot\admin\vendor\jquery\jquery.slim.js" />
     <Content Remove="wwwroot\admin\vendor\jquery\jquery.slim.min.js" />
     <Content Remove="wwwroot\admin\vendor\jquery\jquery.slim.min.map" />
+    <Content Remove="wwwroot\shopHome\assets\favicon.ico" />
+    <Content Remove="wwwroot\shopHome\css\styles.css" />
+    <Content Remove="wwwroot\shopHome\js\scripts.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -3733,6 +3736,9 @@
     <None Include="wwwroot\admin\vendor\jquery\jquery.slim.js" />
     <None Include="wwwroot\admin\vendor\jquery\jquery.slim.min.js" />
     <None Include="wwwroot\admin\vendor\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\shopHome\assets\favicon.ico" />
+    <None Include="wwwroot\shopHome\css\styles.css" />
+    <None Include="wwwroot\shopHome\js\scripts.js" />
   </ItemGroup>
 
   <ItemGroup>

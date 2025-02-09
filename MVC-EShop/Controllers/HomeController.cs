@@ -1,23 +1,38 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MVC_EShop.Areas.Admin.Data;
 using MVC_EShop.Models;
 
 namespace MVC_EShop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly AppDbContext _context;
+        public HomeController(AppDbContext context) => _context = context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public IActionResult Index(int? categoryId)
         {
-            _logger = logger;
+
+
+            var products = categoryId is null 
+                                         ? _context.Products 
+                                         : _context.Products.Where(x => x.CategoryId == categoryId);
+
+            var categories = _context.Categories;
+            ViewBag.Categories = categories;
+            return View(products.ToList());
         }
 
-        public IActionResult Index()
+        public IActionResult ProductDetails(int id) 
         {
-            return View();
-        }
+            var product = _context.Products.Include(p=>p.Category).FirstOrDefault(p => p.Id == id);
+            
+            if (product is null) 
+                return BadRequest();
 
+            return View(product);
+        }
       
         public IActionResult Error()
         {
