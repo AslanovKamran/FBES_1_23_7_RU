@@ -1,47 +1,70 @@
-﻿@model MVC_EShop.Areas.Admin.Models.Product
+﻿@model Product;
 
-@{
-    ViewData["Title"] = "ProductDetails";
+
+<!-- Product section-->
+<section class="py-5">
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="row gx-4 gx-lg-5 align-items-center">
+			<div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="~/images/@Model.ImageUrl" alt="..." /></div>
+			<div class="col-md-6">
+				<div class="small mb-1">@Model.Id</div>
+				<h1 class="display-5 fw-bolder">@Model.Name</h1>
+				<div class="fs-5 mb-5">
+					<span>@Model.Price $</span>
+				</div>
+				<p class="lead">
+					@Model.Description
+				</p>
+				<div class="d-flex">
+					<input class="form-control text-center me-3;" id="inputQuantity" type="number" value="1" style="width:75px" />
+					<button class="btn btn-outline-dark flex-shrink-0" type="button">
+						<i class="bi-cart-fill me-1"></i>
+						Add to cart
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@if (ViewBag.RelatedProducts is not null)
+{
+	<!-- Related items section-->
+	<section class="py-5 bg-light">
+
+		<div class="container px-4 px-lg-5 mt-5">
+			<h2 class="fw-bolder mb-4">Related products</h2>
+			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+				@foreach (var product in ViewBag.RelatedProducts)
+				{
+					<div class="col mb-5">
+						<div class="card h-100">
+							<!-- Product image-->
+							<img class="card-img-top" src="~/images/@product.ImageUrl" alt="..." />
+							<!-- Product details-->
+							<div class="card-body p-4">
+								<div class="text-center">
+									<!-- Product name-->
+									<h5 class="fw-bolder">@product.Name</h5>
+									
+									<!-- Product price-->
+									@product.Price $
+								</div>
+							</div>
+							<!-- Product actions-->
+							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+								<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+
+
 }
 
-<h1>ProductDetails</h1>
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price) $
-        </dd>
-        <dt class = "col-sm-2">
-            Photo
-        </dt>
-        <dd class = "col-sm-10">
-            <img width="100"  src="~/images/@Model.ImageUrl"/>
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-controller="Home" asp-action="Index">Back to List</a>
-</div>
+
+

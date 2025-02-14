@@ -70,6 +70,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
 
                 await _context.AddAsync(product);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Product has been added successfully";
 
             }
             catch (Exception ex)
@@ -126,6 +127,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
 
                 }
                 _context.Update(product);
+                TempData["Update"] = "Product has been updated successfully";
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -174,6 +176,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
             {
                 FileManager.DeleteFile(product.ImageUrl);
                 _context.Products.Remove(product);
+                TempData["Delete"] = "Product has been deleted successfully";
                 await _context.SaveChangesAsync();
             }
 

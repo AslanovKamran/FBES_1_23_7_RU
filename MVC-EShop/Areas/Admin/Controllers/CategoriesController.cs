@@ -41,13 +41,13 @@ namespace MVC_EShop.Areas.Admin.Controllers
         #endregion
 
         #region Create
-    
+
         public IActionResult Create()
         {
             return View();
         }
 
-       
+
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {
@@ -55,6 +55,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Category has been added successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -70,13 +71,13 @@ namespace MVC_EShop.Areas.Admin.Controllers
                 return NotFound();
 
             var category = await _context.Categories.FindAsync(id);
-            
+
             if (category == null)
                 return NotFound();
 
             return View(category);
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Category category)
         {
@@ -88,6 +89,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
                 try
                 {
                     _context.Update(category);
+                    TempData["Update"] = "Category has been udpated successfully";
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -108,10 +110,7 @@ namespace MVC_EShop.Areas.Admin.Controllers
 
         #endregion
 
-
         #region Delete
-
-    
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,12 +131,20 @@ namespace MVC_EShop.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var relatedProducsts = await _context.Products.Where(p => p.CategoryId == id).ToListAsync();
+            if (relatedProducsts.Any())
+            {
+                TempData["Error"] = "Can't delete this category, there are products related to it";
+                return RedirectToAction(nameof(Index));
+            }
+
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
                 _context.Categories.Remove(category);
             }
 
+            TempData["Delete"] = "Category has been deleted successfully";
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

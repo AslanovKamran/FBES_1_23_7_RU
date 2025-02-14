@@ -27,9 +27,13 @@ namespace MVC_EShop.Controllers
         public IActionResult ProductDetails(int id) 
         {
             var product = _context.Products.Include(p=>p.Category).FirstOrDefault(p => p.Id == id);
-            
+
             if (product is null) 
                 return BadRequest();
+
+            var selectedCategoryId = product.CategoryId;
+            var relatedProducts = _context.Products.Where(p => p.CategoryId == selectedCategoryId && p.Id != id).ToList();
+            ViewBag.RelatedProducts = relatedProducts;
 
             return View(product);
         }
