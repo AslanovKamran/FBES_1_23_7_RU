@@ -15,7 +15,7 @@ public static class FileManager
                 throw new InvalidOperationException("Only .jpg, .jpeg, and .png files are allowed.");
             }
 
-            var fileName = $"{Guid.NewGuid().ToString()}{file.FileName}";
+            var fileName = $"{Guid.NewGuid()}{file.FileName}";
             var path = Path.Combine("wwwroot", "images", fileName);
             using (var stream = new FileStream(path, FileMode.OpenOrCreate))
             {
@@ -29,6 +29,7 @@ public static class FileManager
         }
     }
 
+    
     public static void DeleteFile(string fileName)
     {
 

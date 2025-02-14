@@ -15,11 +15,12 @@ namespace MVC_EShop.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
-
         public ProductsController(AppDbContext context)
         {
             _context = context;
         }
+
+        #region Get
 
         public async Task<IActionResult> Index()
         {
@@ -45,6 +46,10 @@ namespace MVC_EShop.Areas.Admin.Controllers
 
             return View(product);
         }
+
+        #endregion
+
+        #region Create
 
         public IActionResult Create()
         {
@@ -76,6 +81,10 @@ namespace MVC_EShop.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region Edit
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,7 +101,6 @@ namespace MVC_EShop.Areas.Admin.Controllers
             return View(product);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Product product)
         {
@@ -100,7 +108,6 @@ namespace MVC_EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
 
             try
             {
@@ -137,6 +144,9 @@ namespace MVC_EShop.Areas.Admin.Controllers
 
         }
 
+        #endregion
+
+        #region Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -164,11 +174,15 @@ namespace MVC_EShop.Areas.Admin.Controllers
             {
                 FileManager.DeleteFile(product.ImageUrl);
                 _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
+
+
 
         private bool ProductExists(int id)
         {
