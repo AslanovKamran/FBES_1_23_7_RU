@@ -6,5 +6,5 @@ public class Category
     public string Name { get; set; }
 
     //Nav Property 
-    List<Product> Products { get; set; } = new();
+    List<Product>? Products { get; set; } 
 }
