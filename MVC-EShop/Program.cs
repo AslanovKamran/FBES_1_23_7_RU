@@ -3,6 +3,8 @@ using MVC_EShop.Areas.Admin.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSession();
+
 builder.Services.AddControllersWithViews();
 
 //Add db context
@@ -24,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
+app.UseSession();
 
 app.MapControllerRoute(
      name: "areas",

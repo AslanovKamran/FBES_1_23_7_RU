@@ -13,7 +13,7 @@ public class Product
     public string ImageUrl { get; set; }    
     public string Description { get; set; } 
     public int CategoryId { get; set; }
-    public int? Rating{ get; set; }
+    public int Rating{ get; set; }
     //Nav property
     public Category? Category { get; set; }
     // Add this to handle the uploaded file

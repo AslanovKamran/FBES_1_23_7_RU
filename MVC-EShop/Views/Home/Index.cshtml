@@ -1,5 +1,4 @@
-﻿@model List<Product>
-
+﻿@model ProductsCategoriesDto
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -24,11 +23,11 @@
         <div class="container px-4 px-lg-5">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <ul class="navbar-nav w-100 d-flex justify-content-center mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item">
                         <a class="nav-link active" asp-action="Index">All</a>
                     </li>
-                    @foreach (var item in ViewBag.Categories)
+                    @foreach (var item in Model.Categories)
                     {
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@item.Id" class="nav-link">@item.Name</a>
@@ -36,13 +35,7 @@
                     }
 
                 </ul>
-                <form class="d-flex">
-                    <button class="btn btn-outline-dark" type="submit">
-                        <i class="bi-cart-fill me-1"></i>
-                        Cart
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                    </button>
-                </form>
+              
             </div>
         </div>
     </nav>
@@ -56,12 +49,12 @@
         <div class="container px-4 px-lg-5 mt-5">
 
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                @foreach (var product in Model)
+                @foreach (var product in Model.Products)
                 {
 
                     <div class="col mb-5">
                         <div class="card h-100">
-                            <img class="card-img-top" src="~/images/@product.ImageUrl" alt="..." />
+                            <img height="250px" style="object-fit:contain" class="card-img-top" src="~/images/@product.ImageUrl" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -73,10 +66,12 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" asp-controller="Home" asp-action="ProductDetails" asp-route-id="@product.Id">View options</a>
-                                 </div>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a style="width:110px, padding:5px" class="btn btn-outline-dark mt-auto" asp-controller="Home" asp-action="ProductDetails" asp-route-id="@product.Id">View options</a>
+                                    <a style="width:110px, padding:5px" class="btn btn-outline-dark mt-auto" asp-controller="Home" asp-action="AddToCart" asp-route-id="@product.Id">Add to cart</a>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 

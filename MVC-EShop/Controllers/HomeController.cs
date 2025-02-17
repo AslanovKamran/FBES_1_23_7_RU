@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_EShop.Areas.Admin.Data;
+using MVC_EShop.DTO;
+using MVC_EShop.Helpers;
 using MVC_EShop.Models;
 
 namespace MVC_EShop.Controllers
@@ -11,17 +13,24 @@ namespace MVC_EShop.Controllers
         private readonly AppDbContext _context;
         public HomeController(AppDbContext context) => _context = context;
 
+        #region Get
+
         public IActionResult Index(int? categoryId)
         {
-
 
             var products = categoryId is null 
                                          ? _context.Products 
                                          : _context.Products.Where(x => x.CategoryId == categoryId);
 
             var categories = _context.Categories;
-            ViewBag.Categories = categories;
-            return View(products.ToList());
+
+            var productsCategoriesDto = new ProductsCategoriesDto
+            {
+                Products = products.ToList(),
+                Categories = categories.ToList()
+            };
+
+            return View(productsCategoriesDto);
         }
 
         public IActionResult ProductDetails(int id) 
@@ -37,10 +46,23 @@ namespace MVC_EShop.Controllers
 
             return View(product);
         }
-      
+
+        #endregion
+
+        public IActionResult AddToCart(int id) 
+        {
+            var productToAdd = _context.Products.FirstOrDefault(p => p.Id == id);
+            CartManager.AddToCart(HttpContext.Session, productToAdd);
+            return RedirectToAction(nameof(Index));
+        }
+
+        #region Error Page
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #endregion
     }
 }
