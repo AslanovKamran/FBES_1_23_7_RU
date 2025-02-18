@@ -3,9 +3,10 @@
 	int totalAmount = Model.Sum(x => x.Amount);
 	decimal totalCost = Model is null ? 0 : Model.Sum(x => x.Product.Price * x.Amount);
 }
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#cartModal">
-	<i class="bi-cart-fill me-1"></i>Cart<span class="badge bg-dark text-white ms-1 rounded-pill">@totalAmount</span>
+	<i class="bi-cart-fill me-1"></i>&nbsp;Cart&nbsp;<span class="badge bg-dark text-white ms-1 rounded-pill">@totalAmount</span>
 </button>
 
 <!-- Modal -->
@@ -57,7 +58,6 @@
 					</table>
 					<h5>Total Cost: @totalCost $</h5>
 				}
-
 				else
 				{
 					<h3>Cart is empty 😨</h3>

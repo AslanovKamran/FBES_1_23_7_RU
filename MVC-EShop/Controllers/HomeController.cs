@@ -1,15 +1,17 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_EShop.Areas.Admin.Data;
-using MVC_EShop.DTO;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using MVC_EShop.Helpers;
 using MVC_EShop.Models;
+using MVC_EShop.DTO;
 
 namespace MVC_EShop.Controllers
 {
     public class HomeController : Controller
     {
+        const int ItemsPerPage = 4;
+
         #region Initialization
 
         private readonly AppDbContext _context;
@@ -19,33 +21,49 @@ namespace MVC_EShop.Controllers
 
         #region Get
 
-        public IActionResult Index(int? categoryId)
+        public IActionResult Index(int? categoryId, int page = 1)
         {
+            var query = (categoryId is null) ? _context.Products.AsQueryable()
+                                             : _context.Products.AsQueryable().Where(p => p.CategoryId == categoryId);
 
-            var products = categoryId is null 
-                                         ? _context.Products 
-                                         : _context.Products.Where(x => x.CategoryId == categoryId);
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)ItemsPerPage);
 
-            var categories = _context.Categories;
+            var products = query
+                .Skip((page - 1) * ItemsPerPage)
+                .Take(ItemsPerPage)
+                .ToList();
 
-            var productsCategoriesDto = new ProductsCategoriesDto
+            var response = new ProductsCategoriesDto
             {
-                Products = products.ToList(),
-                Categories = categories.ToList()
+                Products = products,
+                Categories = _context.Categories.ToList(),
+                Pagination = new PaginationDto
+                {
+                    CurrentPage = page,
+                    TotalPages = totalPages,
+                    ItemsPerPage = ItemsPerPage,
+                    TotalItems = totalItems
+                }
             };
 
-            return View(productsCategoriesDto);
+            return View(response);
         }
 
-        public IActionResult ProductDetails(int id) 
+        public IActionResult ProductDetails(int id)
         {
-            var product = _context.Products.Include(p=>p.Category).FirstOrDefault(p => p.Id == id);
+            var product = _context.Products
+                                  .Include(p => p.Category)
+                                  .FirstOrDefault(p => p.Id == id);
 
-            if (product is null) 
+            if (product is null)
                 return BadRequest();
 
             var selectedCategoryId = product.CategoryId;
-            var relatedProducts = _context.Products.Where(p => p.CategoryId == selectedCategoryId && p.Id != id).ToList();
+            var relatedProducts = _context.Products
+                                          .Where(p => p.CategoryId == selectedCategoryId && p.Id != id)
+                                          .ToList();
+
             ViewBag.RelatedProducts = relatedProducts;
 
             return View(product);
@@ -55,7 +73,7 @@ namespace MVC_EShop.Controllers
 
         #region Cart
 
-        public IActionResult AddToCart(int id) 
+        public IActionResult AddToCart(int id)
         {
             var productToAdd = _context.Products.FirstOrDefault(p => p.Id == id);
             CartManager.AddToCart(HttpContext.Session, productToAdd);

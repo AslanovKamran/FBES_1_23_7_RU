@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MVC_EShop.Areas.Admin.Models;
+﻿using MVC_EShop.Areas.Admin.Models;
+using Microsoft.AspNetCore.Mvc;
 using MVC_EShop.Models;
 using Newtonsoft.Json;
 
@@ -12,6 +12,7 @@ public class CartViewComponent : ViewComponent
         var rawJson = HttpContext.Session.GetString("Cart");
         var cart = rawJson is null ? new List<Product>() : JsonConvert.DeserializeObject<List<Product>>(rawJson);
 
+        var cartItems = new List<CartItem>();
 
         Dictionary<int, CartItem> productsDictionary = new();
         if (cart is not null && cart.Any())
@@ -22,19 +23,16 @@ public class CartViewComponent : ViewComponent
                 if (productsDictionary.ContainsKey(product.Id))
                 {
                     productsDictionary[product.Id].Amount++;
-
                 }
                 else
                 {
                     productsDictionary.Add(product.Id, new CartItem(product, 1));
+
                 }
             }
-            var cartItems = productsDictionary.Values.ToList();
-            return View(cartItems);
+            cartItems = productsDictionary.Values.ToList();
+
         }
-
-        return View(new List<CartItem>());
-
-
+        return View(cartItems);
     }
 }

@@ -1,4 +1,4 @@
-﻿using MVC_EShop.Areas.Admin.Models;
+﻿ using MVC_EShop.Areas.Admin.Models;
 
 namespace MVC_EShop.Models;
 

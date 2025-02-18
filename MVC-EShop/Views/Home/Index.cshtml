@@ -68,25 +68,25 @@
 									<a style="width:110px, padding:5px" class="btn btn-outline-dark mt-auto" asp-controller="Home" asp-action="AddToCart" asp-route-id="@product.Id">Add to cart</a>
 								</div>
 							</div>
-
 						</div>
 					</div>
 
 				}
-
 			</div>
+
+			<div class="btn-group align-self-center" role="group" aria-label="Pagination">
+				@for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+				{
+					<a asp-controller="Home" asp-action="Index" asp-route-page="@i"
+					   class="btn @(i == Model.Pagination.CurrentPage ? "btn-primary" : "btn-secondary")">
+						@i
+					</a>
+				}
+			</div>
+
 		</div>
 	</section>
 
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const urlParams = new URLSearchParams(window.location.search);
-			if (urlParams.has('cartOpened')) {
-				var myModal = new bootstrap.Modal(document.getElementById('cartModal'));
-				myModal.show();
-			}
-		});
-	</script>
 </div>
 
 @section Scripts
