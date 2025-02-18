@@ -1,60 +1,72 @@
 ﻿@model List<CartItem>
 @{
-    int totalAmount = Model.Sum(x => x.Amount);
-    decimal totalCost = Model is null ? 0 : Model.Sum(x => x.Product.Price * x.Amount);
+	int totalAmount = Model.Sum(x => x.Amount);
+	decimal totalCost = Model is null ? 0 : Model.Sum(x => x.Product.Price * x.Amount);
 }
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
-    <i class="bi-cart-fill me-1"></i>Cart<span class="badge bg-dark text-white ms-1 rounded-pill">@totalAmount</span>
+<button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#cartModal">
+	<i class="bi-cart-fill me-1"></i>Cart<span class="badge bg-dark text-white ms-1 rounded-pill">@totalAmount</span>
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">My Cart 🛒</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModal" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">My Cart 🛒</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 
-            <div class="modal-body">
-                
-                @if (Model is not null && Model.Any())
-                {
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                
-                                <tr>
-                                    <td>@item.Product.Name </td>
-                                    <td>@item.Product.Price $</td>
-                                    <td>@item.Amount</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <h5>Total Cost: @totalCost $</h5>
-                }
+			<div class="modal-body">
 
-                else
-                {
-                    <h3>Cart is empty 😨</h3>
-                }
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
+				@if (Model is not null && Model.Any())
+				{
+					<table class="table">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">Name</th>
+								<th scope="col">Price</th>
+								<th scope="col">Amount</th>
+								<th scope="col">Remove One</th>
+								<th scope="col">Remove All</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model)
+							{
+
+								<tr>
+									<td>@item.Product.Name </td>
+									<td>@item.Product.Price $</td>
+									<td>@item.Amount</td>
+									<td class="text-center">
+										<a asp-controller="Home" asp-action="RemoveFromCart" asp-route-productId="@item.Product.Id">
+											<i class="bi bi-x" style="color: red;"></i>
+										</a>
+									</td>
+									<td class="text-center">
+										<a asp-controller="Home" asp-action="RemoveAllFromCart" asp-route-productId="@item.Product.Id">
+											<i class="bi bi-trash" style="color: red;"></i>
+										</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+					<h5>Total Cost: @totalCost $</h5>
+				}
+
+				else
+				{
+					<h3>Cart is empty 😨</h3>
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
 </div>

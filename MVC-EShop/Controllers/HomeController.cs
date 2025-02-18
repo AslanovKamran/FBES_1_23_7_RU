@@ -10,8 +10,12 @@ namespace MVC_EShop.Controllers
 {
     public class HomeController : Controller
     {
+        #region Initialization
+
         private readonly AppDbContext _context;
         public HomeController(AppDbContext context) => _context = context;
+
+        #endregion
 
         #region Get
 
@@ -49,12 +53,28 @@ namespace MVC_EShop.Controllers
 
         #endregion
 
+        #region Cart
+
         public IActionResult AddToCart(int id) 
         {
             var productToAdd = _context.Products.FirstOrDefault(p => p.Id == id);
             CartManager.AddToCart(HttpContext.Session, productToAdd);
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult RemoveFromCart(int productId)
+        {
+            CartManager.RemoveFromCart(HttpContext.Session, productId);
+            return RedirectToAction("Index", "Home", new { cartOpened = true });
+        }
+
+        public IActionResult RemoveAllFromCart(int productId)
+        {
+            CartManager.RemoveAllFromCart(HttpContext.Session, productId);
+            return RedirectToAction("Index", "Home", new { cartOpened = true });
+        }
+
+        #endregion
 
         #region Error Page
 

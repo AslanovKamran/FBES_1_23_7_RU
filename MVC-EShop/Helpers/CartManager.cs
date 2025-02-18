@@ -21,4 +21,32 @@ public static class CartManager
         cart.Add(product);
         session.SetString("Cart", JsonConvert.SerializeObject(cart));
     }
+    public static void RemoveFromCart(ISession session, int productId)
+    {
+        var rawProducts = session.GetString("Cart");
+        if (rawProducts is null) return;
+
+        var cart = JsonConvert.DeserializeObject<List<Product>>(rawProducts)!;
+
+        // Remove only ONE occurrence of the product
+        var productToRemove = cart.FirstOrDefault(p => p.Id == productId);
+        if (productToRemove != null)
+        {
+            cart.Remove(productToRemove);
+            session.SetString("Cart", JsonConvert.SerializeObject(cart));
+        }
+    }
+
+    public static void RemoveAllFromCart(ISession session, int productId)
+    {
+        var rawProducts = session.GetString("Cart");
+        if (rawProducts is null) return;
+
+        var cart = JsonConvert.DeserializeObject<List<Product>>(rawProducts)!;
+
+        // Remove ALL occurrences of the product
+        cart.RemoveAll(p => p.Id == productId);
+
+        session.SetString("Cart", JsonConvert.SerializeObject(cart));
+    }
 }
