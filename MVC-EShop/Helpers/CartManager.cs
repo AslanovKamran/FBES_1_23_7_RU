@@ -36,7 +36,6 @@ public static class CartManager
             session.SetString("Cart", JsonConvert.SerializeObject(cart));
         }
     }
-
     public static void RemoveAllFromCart(ISession session, int productId)
     {
         var rawProducts = session.GetString("Cart");
@@ -48,5 +47,14 @@ public static class CartManager
         cart.RemoveAll(p => p.Id == productId);
 
         session.SetString("Cart", JsonConvert.SerializeObject(cart));
+    }
+
+    public static IEnumerable<Product> GetProducts(ISession session) 
+    {
+        var rawJson = session.GetString("Cart");
+        if (rawJson is null) return Enumerable.Empty<Product>();
+
+        var cart = JsonConvert.DeserializeObject<List<Product>>(rawJson);
+        return cart ?? Enumerable.Empty<Product>();
     }
 }
