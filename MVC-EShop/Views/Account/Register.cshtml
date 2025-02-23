@@ -1,0 +1,29 @@
+﻿@model RegisterDto
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+@await Html.PartialAsync("_Alerts")
+
+<h1>Register</h1>
+<hr />
+
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" type="email" class="form-control">
+        <span asp-validation-for="Email" class="form-text text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control">
+        <span asp-validation-for="Password" class="form-text text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control">
+        <span asp-validation-for="ConfirmPassword" class="form-text text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using MVC_EShop.Helpers;
 using MVC_EShop.Models;
 using MVC_EShop.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVC_EShop.Controllers;
 
@@ -71,6 +72,9 @@ public class HomeController : Controller
         return View(product);
     }
 
+    [Authorize]
+    public IActionResult SecretPage() => View();
+
     #endregion
 
     #region Cart
@@ -78,8 +82,8 @@ public class HomeController : Controller
     public IActionResult AddToCart(int id)
     {
         var productToAdd = _context.Products.FirstOrDefault(p => p.Id == id);
-        
-        if(productToAdd is null)
+
+        if (productToAdd is null)
             return BadRequest();
 
         CartManager.AddToCart(HttpContext.Session, productToAdd);

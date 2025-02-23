@@ -24,10 +24,35 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
                         </li>
-                    <form asp-controller="Orders" asp-action="OrderDetails">
-                        <input style="width:100px" class="form-control mr-sm-2" name="id" placeholder="Order Id">
-                    </form>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SecretPage">Secret Page</a>
+                        </li>
+                        <li>
+                            <form asp-controller="Orders" asp-action="OrderDetails">
+                                <input style="width:100px" class="form-control mr-sm-2" name="id" placeholder="Order Id">
+                            </form>
+                        </li>
                     </ul>
+                    <div class="dropdown show mr-2">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @(User.Identity!.Name ?? "Account")
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                            @if (User.Identity!.IsAuthenticated)
+                            {
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Log Out</a>
+                            }
+
+                            else
+                            {
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="dropdown-item" asp-controller="Account" asp-action="Login">Log In</a>
+                            }
+
+                        </div>
+                    </div>
                     @await Component.InvokeAsync("Cart")
                 </div>
 

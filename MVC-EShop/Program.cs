@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVC_EShop.Areas.Admin.Data;
+using MVC_EShop.Areas.Admin.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +18,11 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 
 #endregion
 
-var app = builder.Build();
+//NuGet Microsoft.AspNetCore.Identity.EntityFrameworkCore
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -25,6 +30,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseSession();
 

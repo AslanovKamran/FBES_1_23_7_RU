@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVC_EShop.Areas.Admin.Models;
 
 namespace MVC_EShop.Areas.Admin.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext
+            : IdentityDbContext<AppUser>
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
@@ -24,6 +27,8 @@ public class AppDbContext : DbContext
             .HasOne(o => o.Order)
             .WithMany(o => o.OrderProducts)
             .HasForeignKey(o => o.OrderId);
+
+        base.OnModelCreating(modelBuilder);
     }
 
     // MS SQL Tables
