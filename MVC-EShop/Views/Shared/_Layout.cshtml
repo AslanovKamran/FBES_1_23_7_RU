@@ -24,6 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
                         </li>
+                    <form asp-controller="Orders" asp-action="OrderDetails">
+                        <input style="width:100px" class="form-control mr-sm-2" name="id" placeholder="Order Id">
+                    </form>
                     </ul>
                     @await Component.InvokeAsync("Cart")
                 </div>

@@ -1,0 +1,15 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "OrderDetails";
+}
+
+<h1>Order Details</h1>
+@if (Model is null)
+{
+    <h1>Can't find your order</h1>
+}
+else
+{
+    <h1>@(Model.IsDone == true ? "Ready to take" : "Is being cooked")</h1>
+}
+

@@ -47,6 +47,8 @@ public class HomeController : Controller
             }
         };
 
+        ViewBag.SelectedCategoryId = categoryId;
+
         return View(response);
     }
 
@@ -76,6 +78,10 @@ public class HomeController : Controller
     public IActionResult AddToCart(int id)
     {
         var productToAdd = _context.Products.FirstOrDefault(p => p.Id == id);
+        
+        if(productToAdd is null)
+            return BadRequest();
+
         CartManager.AddToCart(HttpContext.Session, productToAdd);
         return RedirectToAction(nameof(Index));
     }

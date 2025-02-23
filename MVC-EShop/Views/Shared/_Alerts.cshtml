@@ -1,0 +1,22 @@
+﻿@if (TempData.Keys.Any())
+{
+	@foreach (var key in TempData.Keys)
+	{
+		var alertClass = key switch
+		{
+			"Error" => "alert-danger",
+			"Delete" => "alert-danger",
+			"Success" => "alert-success",
+			"Update" => "alert-info",
+			"Info" => "alert-info",
+			_ => "alert-primary"
+		};
+
+		<div class="alert @alertClass alert-dismissible fade show" role="alert">
+			<strong>@TempData[key]</strong>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	}
+}
