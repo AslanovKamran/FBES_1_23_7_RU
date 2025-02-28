@@ -11,12 +11,16 @@ public class AccountController : Controller
 
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _roleManager = roleManager;
     }
+
+
 
     #region Register
 
@@ -40,6 +44,9 @@ public class AccountController : Controller
 
         if (!registerResult.Succeeded)
             RedirectToRegisterWithError("Error while saving the user");
+
+        await _roleManager.CreateAsync(new IdentityRole("Admin"));
+        await _userManager.AddToRoleAsync(appUser, "Admin");
 
         TempData["Success"] = "User registered successfully";
         return RedirectToAction("Index", "Home");

@@ -72,7 +72,7 @@ public class HomeController : Controller
         return View(product);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult SecretPage() => View();
 
     #endregion
