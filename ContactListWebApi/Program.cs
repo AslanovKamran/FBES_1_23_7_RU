@@ -1,5 +1,5 @@
-using ContactListWebApi.Data;
 using Microsoft.EntityFrameworkCore;
+using ContactListWebApi.Data;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +33,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(opt => opt.DisplayRequestDuration());
 }
+
+app.UseCors(options =>
+{
+    options.AllowAnyMethod();   // Allows GET, POST, PUT, DELETE, etc.
+    options.AllowAnyHeader();   // Allows any HTTP headers in requests
+    options.AllowAnyOrigin();   // Allows requests from any domain
+});
 
 app.UseAuthorization();
 

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+    <section id="GetAll">
+        
+        <h1>Contact List</h1>
+        <button class="btn" onclick="fetchContacts()">Load Contacts</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+
+            <tbody id="list_tbody">
+                <!-- Fetched Contacts Here -->
+            </tbody>
+        </table>
+
+    </section>
+    
+    <section id="GetOne">        
+        <h1 style="margin-top: 50px;">Contact Search</h1>
+        <div class="search-container">
+            <label for="contactId" class="label">Enter Contact ID:</label>
+            <input type="number" id="contactId" class="input" placeholder="Enter ID" min="1">
+            <button class="btn" onclick="fetchContactById()">Search Contact</button>
+        </div>
+
+        <div id="contactDetails" class="contact-details">
+            <!-- Contact details will be displayed here -->
+        </div>
+
+    </section>
+ 
+    <section id="Create">
+
+    <h1>Create Contact</h1>
+
+    <div class="form-container">
+        <form id="contactForm">
+            <label for="name" class="label">Name:</label>
+            <input type="text" id="name" class="input" placeholder="Enter name" required>
+
+            <label for="phone" class="label">Phone:</label>
+            <input type="text" id="phone" class="input" placeholder="Enter phone number" required>
+
+            <button type="submit" class="btn">Create Contact</button>
+        </form>
+    </div>
+
+    </section>
+
+    <section id="Delete">
+
+    <!-- Delete by Id -->
+    <h1>Delete Contact</h1>
+
+    <div class="form-container">
+        <form id="deleteForm">
+            <label for="deleteId" class="label">Enter Contact ID to Delete:</label>
+            <input type="number" id="deleteId" class="input" placeholder="Enter ID" required>
+
+            <button type="submit" class="btn">Delete Contact</button>
+        </form>
+    </div>
+
+    </section>
+
+    <section id="Update">
+
+    <!-- Udpate Contact -->
+    <h1>Update Contact</h1>
+
+    <div class="form-container">
+        <form id="updateForm">
+            <label for="updateContactId" class="label">Enter Contact ID to Update:</label>
+            <input type="number" id="updateContactId" class="input" placeholder="Enter Contact ID" required>
+
+            <label for="updateName" class="label">Name:</label>
+            <input type="text" id="updateName" class="input" placeholder="Enter new name" required>
+
+            <label for="updatePhone" class="label">Phone:</label>
+            <input type="text" id="updatePhone" class="input" placeholder="Enter new phone number" required>
+
+            <button type="submit" class="btn">Update Contact</button>
+        </form>
+    </div>
+
+    </section>
+
+</body>
+
+</html>

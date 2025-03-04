@@ -1,6 +1,7 @@
-﻿using ContactListWebApi.Data;
-using ContactListWebApi.Models;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using ContactListWebApi.Models;
+using ContactListWebApi.Data;
 
 namespace ContactListWebApi.Controllers;
 
@@ -10,52 +11,123 @@ public class ContactsController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    public ContactsController(AppDbContext context)
-    {
-        _context = context;
-    }
+    public ContactsController(AppDbContext context) => _context = context;
+
+    #region Get 
+
     /// <summary>
     /// Get all contacts
     /// </summary>
     /// <returns></returns>
+
     [HttpGet]
-    public IActionResult GetContacts()
+    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> GetContacts()
     {
-        return new JsonResult(_context.Contacts.ToList());
+        var contacts = await _context.Contacts
+            .AsNoTracking().ToListAsync();
+
+        if (!contacts.Any())
+            return NoContent(); 
+
+        return Ok(contacts);
     }
+
+    /// <summary>
+    /// Get an existing contact by id   
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
 
     [HttpGet("{id}")]
-    public ActionResult<Contact> GetContactById(int id)
+    public IActionResult GetContactById(int id)
     {
-        var contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
-        return contact!;
+        var contact = _context.Contacts
+            .AsNoTracking().FirstOrDefault(c=>c.Id == id);
+
+        if (contact is null)
+            return NotFound($"Contact with ID = {id} was not found.");
+
+        return Ok(contact);
     }
+
+    #endregion
+
+    #region Post
+
+    /// <summary>
+    /// Create a new contact
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <returns></returns>
 
     [HttpPost]
-    public void CreateContact(Contact contact)
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    public IActionResult CreateContact(Contact contact)
     {
-        var entity = _context.Contacts.Add(contact);
+        if (contact is null)
+            return BadRequest("Contact cannot be null.");
+
+        var contactEntity = _context.Contacts.Add(contact).Entity;
         _context.SaveChanges();
+
+        return CreatedAtAction(nameof(GetContactById), 
+                               new { id = contactEntity.Id }, 
+                               contactEntity);
     }
 
-    [HttpPost("bulk")]
-    public void BulkInser(List<Contact> contacts)
-    {
-        _context.Contacts.AddRange(contacts);
-        _context.SaveChanges();
-    }
+    #endregion
 
+    #region Update
+    /// <summary>
+    /// Update an existing contact
+    /// </summary>
+    /// <param name="contact"></param>
+    
     [HttpPut]
-    public void UpdateContact(Contact contact)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    public IActionResult UpdateContact(Contact contact)
     {
-        _context.Contacts.Update(contact);
+        if (contact is null)
+            return BadRequest("Contact cannot be null.");
+
+        var existingContact = _context.Contacts
+            .AsNoTracking().FirstOrDefault(c=>c.Id == contact.Id);
+        if (existingContact is null)
+            return NotFound($"Contact with ID {contact.Id} was not found.");
+
+        _context.Update(contact); 
         _context.SaveChanges();
+
+        return Ok(existingContact);
     }
 
+    #endregion
+
+    #region Delete
+
+    /// <summary>
+    /// Delete an existing contact by id
+    /// </summary>
+    /// <param name="id"></param>
+    
     [HttpDelete("{id}")]
-    public void DeleteContactById(int id)
+    public IActionResult DeleteContactById(int id)
     {
-        _context.Remove(_context.Contacts.FirstOrDefault(c => c.Id == id));
+        var contact =  _context.Contacts
+                        .AsNoTracking()
+                        .FirstOrDefault(c=>c.Id == id);
+        if (contact is null)
+            return NotFound($"Contact with ID {id} was not found.");
+
+        _context.Contacts.Remove(contact);
         _context.SaveChanges();
+
+        return NoContent();
     }
+
+    #endregion
 }
