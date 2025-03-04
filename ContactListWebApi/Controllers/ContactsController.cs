@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ContactListWebApi.Models;
 using ContactListWebApi.Data;
+using ContactListWebApi.Repository;
+using System.Threading.Tasks;
 
 namespace ContactListWebApi.Controllers;
 
@@ -9,9 +11,9 @@ namespace ContactListWebApi.Controllers;
 [ApiController]
 public class ContactsController : ControllerBase
 {
-    private readonly AppDbContext _context;
 
-    public ContactsController(AppDbContext context) => _context = context;
+    private readonly IContactsRepository _repos;
+    public ContactsController(IContactsRepository repos) => _repos = repos;
 
     #region Get 
 
@@ -25,12 +27,7 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(204)]
     public async Task<IActionResult> GetContacts()
     {
-        var contacts = await _context.Contacts
-            .AsNoTracking().ToListAsync();
-
-        if (!contacts.Any())
-            return NoContent(); 
-
+        var contacts = await _repos.GetContactsAsync();
         return Ok(contacts);
     }
 
@@ -41,10 +38,9 @@ public class ContactsController : ControllerBase
     /// <returns></returns>
 
     [HttpGet("{id}")]
-    public IActionResult GetContactById(int id)
+    public async Task<IActionResult> GetContactById(int id)
     {
-        var contact = _context.Contacts
-            .AsNoTracking().FirstOrDefault(c=>c.Id == id);
+        var contact = await _repos.GetContactByIdAsync(id);
 
         if (contact is null)
             return NotFound($"Contact with ID = {id} was not found.");
@@ -65,16 +61,15 @@ public class ContactsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
-    public IActionResult CreateContact(Contact contact)
+    public async Task<IActionResult> CreateContact(Contact contact)
     {
         if (contact is null)
             return BadRequest("Contact cannot be null.");
 
-        var contactEntity = _context.Contacts.Add(contact).Entity;
-        _context.SaveChanges();
+        var contactEntity = await _repos.CreateContactAsync(contact);
 
-        return CreatedAtAction(nameof(GetContactById), 
-                               new { id = contactEntity.Id }, 
+        return CreatedAtAction(nameof(GetContactById),
+                               new { id = contactEntity.Id },
                                contactEntity);
     }
 
@@ -85,24 +80,20 @@ public class ContactsController : ControllerBase
     /// Update an existing contact
     /// </summary>
     /// <param name="contact"></param>
-    
+
     [HttpPut]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public IActionResult UpdateContact(Contact contact)
+    public async Task<IActionResult> UpdateContact(Contact contact)
     {
         if (contact is null)
             return BadRequest("Contact cannot be null.");
 
-        var existingContact = _context.Contacts
-            .AsNoTracking().FirstOrDefault(c=>c.Id == contact.Id);
-        if (existingContact is null)
-            return NotFound($"Contact with ID {contact.Id} was not found.");
 
-        _context.Update(contact); 
-        _context.SaveChanges();
 
-        return Ok(existingContact);
+        var updated = await _repos.UpdateContactAsync(contact);
+
+        return Ok(updated);
     }
 
     #endregion
@@ -113,19 +104,11 @@ public class ContactsController : ControllerBase
     /// Delete an existing contact by id
     /// </summary>
     /// <param name="id"></param>
-    
+
     [HttpDelete("{id}")]
-    public IActionResult DeleteContactById(int id)
+    public async Task<IActionResult> DeleteContactById(int id)
     {
-        var contact =  _context.Contacts
-                        .AsNoTracking()
-                        .FirstOrDefault(c=>c.Id == id);
-        if (contact is null)
-            return NotFound($"Contact with ID {id} was not found.");
-
-        _context.Contacts.Remove(contact);
-        _context.SaveChanges();
-
+        await _repos.DeleteContactAsync(id);
         return NoContent();
     }
 
