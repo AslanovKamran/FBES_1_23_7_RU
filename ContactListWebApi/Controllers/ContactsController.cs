@@ -4,11 +4,13 @@ using ContactListWebApi.Models;
 using ContactListWebApi.Data;
 using ContactListWebApi.Repository;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContactListWebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ContactsController : ControllerBase
 {
 
@@ -25,6 +27,7 @@ public class ContactsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(401)]
     public async Task<IActionResult> GetContacts()
     {
         var contacts = await _repos.GetContactsAsync();
@@ -38,6 +41,10 @@ public class ContactsController : ControllerBase
     /// <returns></returns>
 
     [HttpGet("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+
     public async Task<IActionResult> GetContactById(int id)
     {
         var contact = await _repos.GetContactByIdAsync(id);
@@ -61,6 +68,7 @@ public class ContactsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateContact(Contact contact)
     {
         if (contact is null)
@@ -84,6 +92,7 @@ public class ContactsController : ControllerBase
     [HttpPut]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateContact(Contact contact)
     {
         if (contact is null)
@@ -106,6 +115,10 @@ public class ContactsController : ControllerBase
     /// <param name="id"></param>
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteContactById(int id)
     {
         await _repos.DeleteContactAsync(id);

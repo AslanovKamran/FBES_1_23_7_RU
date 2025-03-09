@@ -16,6 +16,7 @@ public class TokenGenerator : ITokenGenerator
         {
             new Claim("id", user.Id.ToString()),
             new Claim("sub", user.Login),
+            new Claim("role", user?.Role?.Name!),
         };
 
         var token = new JwtSecurityToken(
