@@ -57,7 +57,7 @@ namespace ContactListWebApi.Controllers
             if (loggedInUser is null) return BadRequest("Wrong Creds");
 
             var accessToken = _tokenGenerator.GenerateToken(loggedInUser);
-            return Ok(accessToken);
+            return Ok(new { AccessToken = accessToken });
         }
     }
 }

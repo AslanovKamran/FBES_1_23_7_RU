@@ -17,6 +17,7 @@ public class TokenGenerator : ITokenGenerator
             new Claim("id", user.Id.ToString()),
             new Claim("sub", user.Login),
             new Claim("role", user?.Role?.Name!),
+            new Claim("iat", ToUnixEpochDate(DateTime.Now).ToString(), ClaimValueTypes.Integer64)
         };
 
         var token = new JwtSecurityToken(
@@ -29,5 +30,11 @@ public class TokenGenerator : ITokenGenerator
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-   
+
+    private static long ToUnixEpochDate(DateTime date)
+    {
+        var offset = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        return (long)Math.Round((date.ToUniversalTime() - offset).TotalSeconds);
+    }
+
 }
