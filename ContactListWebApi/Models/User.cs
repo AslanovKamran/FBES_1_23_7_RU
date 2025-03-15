@@ -9,4 +9,6 @@ public class User
 
     public int RoleId { get; set; }
     public Role? Role { get; set; }
+
+    //public IEnumerable<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

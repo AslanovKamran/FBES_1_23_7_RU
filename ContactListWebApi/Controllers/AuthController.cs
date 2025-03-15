@@ -19,14 +19,14 @@ namespace ContactListWebApi.Controllers
             _tokenGenerator = tokenGenerator;
         }
 
-
+        #region Register
 
         /// <summary>
         /// Register a new user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] RegisterRequest request) 
         {
@@ -43,6 +43,10 @@ namespace ContactListWebApi.Controllers
             }
         }
 
+        #endregion
+
+        #region Login
+
         /// <summary>
         /// Login a user
         /// </summary>
@@ -55,9 +59,90 @@ namespace ContactListWebApi.Controllers
 
             var loggedInUser = await _repos.LogInUserAsync(user.Login, user.Password);
             if (loggedInUser is null) return BadRequest("Wrong Creds");
+            
+            //Generate Access Token
+            var accessToken = _tokenGenerator.GenerateAccessToken(loggedInUser);
 
-            var accessToken = _tokenGenerator.GenerateToken(loggedInUser);
-            return Ok(new { AccessToken = accessToken });
+            //Generate Refresh Token    
+            var refreshToken = new RefreshToken()
+            {
+                Token = _tokenGenerator.GenerateRefreshToken(),
+                UserId = loggedInUser.Id,
+                ExpriresAt = DateTime.Now + TimeSpan.FromDays(30)
+            };
+
+            //Save Refresh Token in DB
+            await _repos.AddRefreshTokenAsync(refreshToken);
+
+            return Ok(new { AccessToken = accessToken, RefreshToken = refreshToken.Token });
         }
+
+        #endregion
+
+        #region Refresh
+        /// <summary>
+        /// Return a new pair of access and refresh tokens
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request) 
+        {
+            //Get Refresh Token from DB
+            var existingRefreshToken = await _repos.GetRefreshTokenByToken(request.RefreshToken);
+
+            //Check if token is valid
+
+                //#1 Check if token exists
+                if (existingRefreshToken is null) 
+                    return Unauthorized("Invalid Refresh Token");
+
+                //#2 Check expiry date
+                if(existingRefreshToken.ExpriresAt < DateTime.Now)
+                {
+                    await _repos.RemoveOldRefreshToken(request.RefreshToken);
+                    return Unauthorized("Refresh Token Expired");
+                }
+
+            //Generate new Access Token
+            var newAccessToken = _tokenGenerator.GenerateAccessToken(existingRefreshToken.User!);
+
+            //Generate new Refresh Token
+            var newRefreshToken = new RefreshToken()
+            {
+                Token = _tokenGenerator.GenerateRefreshToken(),
+                UserId = existingRefreshToken.UserId,
+                ExpriresAt = DateTime.Now + TimeSpan.FromDays(30)
+            };
+
+            //Remove old Refresh Token
+            await _repos.RemoveOldRefreshToken(request.RefreshToken);
+
+            //Save new Refresh Token in DB
+            await _repos.AddRefreshTokenAsync(newRefreshToken);
+
+            //Return a new pair of tokens
+            return Ok(new { AccessToken = newAccessToken, RefreshToken = newRefreshToken.Token });
+        }
+
+        #endregion
+
+        #region Log out
+
+        /// <summary>
+        /// Log out a user (Delete their all refresh tokens)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+
+        [HttpPost("logout/{userId}")]
+        public async Task<IActionResult> LogOut([FromRoute] int userId)
+        {
+            await _repos.RemoveUsersRefreshTokens(userId);
+            return Ok("Logged Out");
+        }
+
+        #endregion
     }
 }

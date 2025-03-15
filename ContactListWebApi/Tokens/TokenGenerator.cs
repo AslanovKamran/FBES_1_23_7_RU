@@ -10,7 +10,7 @@ public class TokenGenerator : ITokenGenerator
     private readonly JwtOptions _options;
     public TokenGenerator(IOptions<JwtOptions> options) => _options = options.Value;
 
-    public string GenerateToken(User user)
+    public string GenerateAccessToken(User user)
     {
         var claims = new List<Claim>()
         {
@@ -30,6 +30,8 @@ public class TokenGenerator : ITokenGenerator
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public string GenerateRefreshToken() => Guid.NewGuid().ToString();
 
     private static long ToUnixEpochDate(DateTime date)
     {

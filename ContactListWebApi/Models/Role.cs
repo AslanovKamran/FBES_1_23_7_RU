@@ -9,5 +9,5 @@ public class Role
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
 
-    public IEnumerable<User> Users { get; set; } = new List<User>();
+    //public IEnumerable<User> Users { get; set; } = new List<User>();
 }
