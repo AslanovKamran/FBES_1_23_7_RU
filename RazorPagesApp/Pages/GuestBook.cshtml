@@ -1,0 +1,32 @@
+﻿@page
+@model RazorPagesApp.Pages.GuestBookModel
+@{
+    ViewData["Title"] = "Converter";
+}
+<h1>Guest Book</h1>
+
+@if (Model.Comments is not null)
+{
+
+    @foreach (var item in Model.Comments)
+    {
+        <div class="media">
+            <div class="media-body">
+                <h5 class="mt-0">@item?.AppUser?.UserName</h5>
+                @item.Text
+                <h5>@item.Date</h5>
+            </div>
+        </div>
+    }
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post">
+        <div class="form-group">
+            <label>Leave your comment below</label>
+            <textarea name="Text" class="form-control" rows="5" cols="12"></textarea>
+        </div>
+        <button class="mt-2 btn btn-outline-success" type="submit">Add</button>
+    </form>
+}

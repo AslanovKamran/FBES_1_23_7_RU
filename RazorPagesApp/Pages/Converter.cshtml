@@ -1,0 +1,31 @@
+﻿@page
+@model RazorPagesApp.Pages.ConverterModel
+@{
+    ViewData["Title"] = "Converter";
+}
+
+<h1>Converter</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label>Amount in ₼ AZN</label>
+        <input id="Azn" type="number" class="form-control mt-2" min="0" value="@Model.Azn" name="Azn" />
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Convert to currency</label>
+        <select name="ToCurrency" class="form-control">
+            <option value="USD" selected="@("USD" == Model.ToCurrency)">USD</option>
+            <option value="EUR" selected="@("EUR" == Model.ToCurrency)">EUR</option>
+            <option value="GBP" selected="@("GBP" == Model.ToCurrency)">GBP</option>
+        </select>
+    </div>
+
+    <button class="btn btn-outline-primary mt-3">Convert</button>
+</form>
+
+<hr />
+@if (Model.Result != 0)
+{
+    <p>Convert result = @Model.Result @Model.ToCurrency</p>
+}
